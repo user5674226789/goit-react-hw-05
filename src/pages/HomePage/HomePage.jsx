@@ -1,30 +1,35 @@
 import { useEffect, useState } from "react";
-
-import {getMovies} from '../../components/movie-api'
+import {fetchTrendMovies} from '../../api-TMDB'
+import toast from "react-hot-toast";
+import Loader from '../../components/Loader/Loader'
+import MovieList from '../../components/MovieList/MovieList'
+import style from './HomePage.module.css'
 
 export default function HomePage() {
-const [movies, setMovies] = useState([]);
-const [error, setError] = useState(false);
-const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-   const [totalPage, setTotalPage] = useState(false);
+    const [trendMovies, setTrendMovies] = useState([]);
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        async function getTrendMovies() {
+            try {
+                setLoading(true);
+                const data = await fetchTrendMovies();
+                setTrendMovies(data.results);
+                setLoading(false);
+            } catch (error) {
+                toast.error("Whoops. Something went wrong! Please try reloading this page!");
+            } finally {
+                setLoading(false);
+            }
+        }
+            getTrendMovies();
 
-   useEffect(() => {
-    //  if (searchQuery.trim() === "") {
-    //    return;
-    //  }
-
-     async function fetchMovies() {
-const { results, total_results } = await getMovies();
-
-     }
-
-     fetchMovies();
-   }, []);
-      return (
-        <div>
-          <h2>Trending movies </h2>
-
+    }, [])
+    return (
+        <div className={style. container}>
+            <h1 className={style.title}>Trending today</h1>
+            {loading && <Loader />}
+            <MovieList movies={trendMovies} />
+        
         </div>
-      );
+    );
 }
