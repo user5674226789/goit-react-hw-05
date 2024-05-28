@@ -29,6 +29,6 @@
 .btn:hover,
 .btn:focus {
   color: rgb(225, 92, 7);
-  background-color: burlywood;
+  background-color: blue;
   border-color: rgb(125, 92, 7);
 }
